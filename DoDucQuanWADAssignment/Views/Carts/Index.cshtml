@@ -1,0 +1,67 @@
+﻿@model Dictionary<int, DoDucQuanWADAssignment.Models.CartItem>
+
+@{
+    ViewBag.Title = "Cart";
+}
+
+<p style="margin-top: 20px;">
+    @Html.ActionLink("Continue shopping", "Index", "Home")
+</p>
+
+<h2>Cart</h2>
+
+@if (Model == null || Model.Count() == 0)
+{
+    <p class="text-info text-center">
+        Cart has no item
+    </p>
+}
+else
+{
+    <table class="table">
+        <tr>
+            <th>
+                Product name
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Unit price
+            </th>
+            <th>
+                Total price
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.Values)
+        {
+            <tr>
+                <td>
+                    @item.ProductName
+                </td>
+                <td>
+                    <form action="@Url.Action("Update")" method="get">
+                        <input type="hidden" name="productId" value="@item.ProductId" />
+                        <input type="number" min="1" step="1" name="quantity" value="@item.Quantity" class="form-control" style="width: 100px; display: inline-block;" />
+                        <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                    </form>
+                </td>
+                <td>
+                    $@item.UnitPrice
+                </td>
+                <td>
+                    $@item.TotalPrice
+                </td>
+                <td align="right">
+                    <a href="@Url.Action("Remove",new { productId = item.ProductId })" class="btn btn-danger btn-sm">Remove</a>
+                </td>
+            </tr>
+        }
+
+    </table>
+    <h4 class="text-right">
+        Total: <b>$@Model.Values.Sum(item => item.TotalPrice)</b>
+    </h4>
+}
